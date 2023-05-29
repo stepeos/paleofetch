@@ -1,5 +1,5 @@
 #include "logos/ubuntu.h"
-#define COLOR "\e[1;36m"
+#define COLOR "\e[1;12m"
 
 #define CONFIG \
 { \
