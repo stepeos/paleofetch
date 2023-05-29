@@ -6,6 +6,13 @@
 #include <string.h>
 #include <dirent.h>
 #include <errno.h>
+#include <sys/types.h>
+
+#include <pwd.h>
+
+#include <unistd.h>
+
+#include <linux/limits.h>
 
 #include <sys/utsname.h>
 #include <sys/sysinfo.h>
@@ -129,8 +136,12 @@ static char *get_title() {
     halt_and_catch_fire("unable to retrieve host name");
 
     char username[BUF_SIZE / 3];
-    status = getlogin_r(username, BUF_SIZE / 3);
-    halt_and_catch_fire("unable to retrieve login name");
+    struct passwd *pass_wd = getpwuid(getuid());
+    strcpy(username, pass_wd->pw_name);
+    strncpy(username, pass_wd->pw_name, sizeof(username) - 1);
+    username[sizeof(username) - 1] = '\0';
+    //status = getlogin_r(username, BUF_SIZE / 3);
+    //halt_and_catch_fire("unable to retrieve login name");
 
     title_length = strlen(hostname) + strlen(username) + 1;
 
